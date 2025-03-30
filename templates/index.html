@@ -1,0 +1,63 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Delay Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Flight Delay Predictor</h1>
+        <form id="predictionForm">
+            <label for="airline">Airline:</label>
+            <input type="text" id="airline" name="airline" placeholder="IndiGo" required><br>
+            
+            <label for="origin">Origin (Airport Code):</label>
+            <input type="text" id="origin" name="origin" placeholder="DEL" required><br>
+            
+            <label for="destination">Destination (Airport Code):</label>
+            <input type="text" id="destination" name="destination" placeholder="BOM" required><br>
+            
+            <label for="flight_duration">Flight Duration (mins):</label>
+            <input type="number" id="flight_duration" name="flight_duration" required><br>
+            
+            <label for="congestion">Congestion Level:</label>
+            <input type="number" id="congestion" name="congestion" placeholder="e.g., 3" required><br>
+            
+            <label for="aircraft_type">Aircraft Type:</label>
+            <input type="text" id="aircraft_type" name="aircraft_type" placeholder="e.g., A320" required><br>
+            
+            <button type="button" onclick="predictDelay()">Predict Delay</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function predictDelay() {
+            const data = {
+                airline: document.getElementById("airline").value,
+                origin: document.getElementById("origin").value,
+                destination: document.getElementById("destination").value,
+                flight_duration: parseFloat(document.getElementById("flight_duration").value),
+                congestion: parseFloat(document.getElementById("congestion").value),
+                aircraft_type: document.getElementById("aircraft_type").value
+            };
+
+            fetch("/predict", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("result").innerHTML = 
+                    "<h2>Predicted Delay: " + result.delay_prediction + " minutes</h2>";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

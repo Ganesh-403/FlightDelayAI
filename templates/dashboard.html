@@ -1,0 +1,86 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Delay Analytics Dashboard</title>
+
+  <!-- Bootstrap for Better Styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <!-- Plotly for Charts -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">Flight Delay Dashboard</a>
+      <a class="btn btn-outline-light" href="/">Home</a>
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="container mt-4">
+    <div class="text-center">
+      <h1 class="mb-4">Flight Delay Analytics Dashboard</h1>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <div class="chart-container">
+          <h3 class="text-center">Average Delay by Route</h3>
+          <div id="route_delay_chart"></div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="chart-container">
+          <h3 class="text-center">Weather Impact on Delays</h3>
+          <div id="weather_chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-lg-6 col-md-12">
+        <div class="chart-container">
+          <h3 class="text-center">Airport Congestion vs Delays</h3>
+          <div id="congestion_chart"></div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="chart-container">
+          <h3 class="text-center">Historical Delay Trends</h3>
+          <div id="time_series_chart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript to Load Plotly Graphs -->
+  <script>
+      var routeDelayData = {{ route_delay_data | safe }};
+      var weatherImpactData = {{ weather_impact_data | safe }};
+      var congestionImpactData = {{ congestion_impact_data | safe }};
+      var delayTrendsData = {{ delay_trends_data | safe }};
+      
+      Plotly.newPlot('route_delay_chart', routeDelayData);
+      Plotly.newPlot('weather_chart', weatherImpactData);
+      Plotly.newPlot('congestion_chart', congestionImpactData);
+      Plotly.newPlot('time_series_chart', delayTrendsData);
+  </script>
+
+  <!-- Bootstrap JS for better responsiveness -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

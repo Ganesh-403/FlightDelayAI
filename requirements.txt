@@ -1,0 +1,14 @@
+flask
+flask-sqlalchemy
+flask-login
+flask-admin
+flask-bcrypt
+dash
+plotly
+pandas
+numpy
+scikit-learn
+xgboost
+gunicorn
+psycopg2-binary
+requests
