@@ -86,7 +86,6 @@ The application will be available at `http://127.0.0.1:5000/`
 
 ## ⭐ Contribute & Support  
 💡 Found a bug? Have an idea? Open an issue or submit a pull request!  
-📧 Contact: [gkambli403@gmail.com](mailto:gkambli403@gmail.com)  
 
 **🚀 Star this repo if you find it useful!** 🌟  
 
