@@ -1,9 +1,12 @@
-from sqlalchemy import create_engine
+# from sqlalchemy import create_engine
 
-DATABASE_URI = "postgresql://postgres:Ganesh%40123@localhost:5432/flight_delay_db"
-engine = create_engine(DATABASE_URI)
+# DATABASE_URI = "postgresql://postgres:Ganesh%40123@localhost:5432/flight_delay_db"
+# engine = create_engine(DATABASE_URI)
 
-with engine.connect() as conn:
-    print("Connection successful!")
+# with engine.connect() as conn:
+#     print("Connection successful!")
 
-#to test db connectivity only
+# #to test db connectivity only
+# import secrets
+# print(secrets.token_hex(32))
+

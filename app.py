@@ -8,7 +8,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from config import DATABASE_URI, SECRET_KEY, WEATHER_API_KEY
-from models import db, User, Prediction  # ✅ Import models after moving them to models.py
+from models import db, User, Prediction  # Import models from models.py
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -17,21 +17,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = SECRET_KEY
 
 # Initialize extensions
-db.init_app(app)  # ✅ Fix: Use db.init_app instead of creating a new instance
+db.init_app(app)
 bcrypt = Bcrypt(app)
 
-# ✅ Initialize LoginManager
+# Initialize LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"  # Redirect unauthorized users to login
 
-# Import setup_admin AFTER db is initialized
+# Import and register Blueprint for admin setup
 from setup_admin import setup_admin_bp, init_admin
-
-# Register Blueprint for setting up admin users
 app.register_blueprint(setup_admin_bp, url_prefix="/admin")
-
-# Initialize Admin Panel
 init_admin(app)
 
 # ----------------- Load the ML Model -----------------
@@ -107,7 +103,7 @@ def predict():
         flight_duration=data['flight_duration'],
         congestion=data['congestion'],
         aircraft_type=data['aircraft_type'],
-        delay=float(prediction)  # Convert to native Python float
+        delay=float(prediction)
     )
     db.session.add(new_prediction)
     db.session.commit()
@@ -118,28 +114,6 @@ def predict():
 def index():
     """Renders the home page."""
     return render_template('index.html')
-
-@app.route('/dashboard')
-def dashboard():
-    """Renders the Flight Delay Analytics Dashboard with Plotly charts."""
-    
-    # Fetch the latest flight delay data (modify this based on your database structure)
-    recent_predictions = Prediction.query.order_by(Prediction.id.desc()).limit(50).all()
-    
-    # Convert the query results into JSON format suitable for Plotly
-    route_delay_data = []  # Replace with your actual query logic
-    weather_impact_data = []  # Replace with actual weather impact data
-    congestion_impact_data = []  # Replace with actual congestion data
-    delay_trends_data = []  # Replace with historical delay trend data
-
-    return render_template(
-        'dashboard.html',
-        route_delay_data=route_delay_data,
-        weather_impact_data=weather_impact_data,
-        congestion_impact_data=congestion_impact_data,
-        delay_trends_data=delay_trends_data
-    )
-
 
 # ----------------- Run the App -----------------
 if __name__ == '__main__':
