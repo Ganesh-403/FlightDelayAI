@@ -56,8 +56,8 @@ The application will be available at `http://127.0.0.1:5000/`
 
 ## 📊 Dashboard Preview  
 
-![Flight Delay Dashboard](assets/dashboard1.png) 
-![Flight Delay Dashboard](assets/dashboard2.png) 
+![Flight Delay Dashboard](assets/dashboard1.jpg) 
+![Flight Delay Dashboard](assets/dashboard2.jpg) 
 
 ---
 
