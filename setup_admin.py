@@ -17,11 +17,12 @@ class AdminModelView(ModelView):
         return current_user.is_authenticated
 
     def inaccessible_callback(self, name, **kwargs):
-        return redirect(url_for('login'))  # Redirect to login if unauthorized
+        return redirect(url_for('login'))
 
 def init_admin(app):
     """Registers Flask-Admin with the app."""
     admin.init_app(app)
+    # Register both Prediction and User views
     admin.add_view(AdminModelView(Prediction, db.session))
     admin.add_view(AdminModelView(User, db.session))
 
@@ -34,18 +35,17 @@ def setup_admin():
         
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        # Check if user already exists
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Admin already exists!", "danger")
             return redirect(url_for('setup_admin.setup_admin'))
 
-        # Create new admin user with is_admin set to True
+        # Create new admin user and mark as admin
         new_admin = User(username=username, password=hashed_password, is_admin=True)
         db.session.add(new_admin)
         db.session.commit()
 
         flash("Admin created successfully!", "success")
-        return redirect(url_for('login'))  # Redirect to login page after creation
+        return redirect(url_for('login'))
 
     return render_template("setup_admin.html")

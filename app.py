@@ -7,6 +7,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 from config import DATABASE_URI, SECRET_KEY, WEATHER_API_KEY
 from models import db, User, Prediction  # Import models from models.py
 
@@ -20,12 +21,15 @@ app.secret_key = SECRET_KEY
 db.init_app(app)
 bcrypt = Bcrypt(app)
 
+# Initialize Flask-Migrate
+migrate = Migrate(app, db)
+
 # Initialize LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"  # Redirect unauthorized users to login
 
-# Import and register Blueprint for admin setup
+# Import setup_admin Blueprint and its admin initializer after db is initialized
 from setup_admin import setup_admin_bp, init_admin
 app.register_blueprint(setup_admin_bp, url_prefix="/admin")
 init_admin(app)
@@ -33,7 +37,7 @@ init_admin(app)
 # ----------------- Load the ML Model -----------------
 model = pickle.load(open("models/model.pkl", "rb"))
 
-# ----------------- User Authentication -----------------
+# ----------------- User Authentication Routes -----------------
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -89,7 +93,6 @@ def predict():
         humidity = 50  # default humidity
 
     # Prepare input features as a 4-element array:
-    # flight_duration, congestion, temperature, humidity
     input_features = np.array([[data['flight_duration'], data['congestion'], temp, humidity]])
     
     # Predict delay using the model
