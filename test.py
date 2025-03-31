@@ -10,3 +10,4 @@
 # import secrets
 # print(secrets.token_hex(32))
 
+#comment mich kel ahe karan hyat 2 seprate scripts ahet
