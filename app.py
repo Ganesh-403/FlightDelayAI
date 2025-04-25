@@ -29,10 +29,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"  # Redirect unauthorized users to login
 
-# Import setup_admin Blueprint and its admin initializer after db is initialized
-from setup_admin import setup_admin_bp, init_admin
-app.register_blueprint(setup_admin_bp, url_prefix="/admin")
-init_admin(app)
 
 # ----------------- Load the ML Model -----------------
 model = pickle.load(open("models/model.pkl", "rb"))
