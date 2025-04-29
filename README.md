@@ -1,95 +1,148 @@
-# ✈ FlightDelayAI – Predict Flight Delays with Machine Learning 🚀  
+# ✈ FlightDelayAI – Predict Flight Delays with Machine Learning 🚀
 
-FlightDelayAI is a **machine learning-powered web application** that predicts flight delays based on various factors like **weather conditions, airport congestion, flight duration, and aircraft type**. The system leverages **Flask**, **PostgreSQL**, and **Plotly.js** to provide an interactive dashboard and REST API for real-time predictions.  
-
----
-
-## 🔹 Features  
-✅ **ML-Powered Predictions** – Uses a trained model to estimate flight delays  
-✅ **Live Weather Data** – Fetches real-time weather for accurate forecasting  
-✅ **Admin Dashboard** – Manage predictions with Flask-Admin  
-✅ **Secure Authentication** – Login system with hashed passwords  
-✅ **Interactive Analytics** – Visualize delays, congestion, and weather impact with Plotly  
-✅ **Database Storage** – Stores predictions in a PostgreSQL database  
+FlightDelayAI is a **machine learning-powered web application** that predicts flight delays based on factors like **weather conditions, airport congestion, flight duration, and aircraft type**. It uses **Flask** for the backend, **PostgreSQL** for data storage, and **Dash/Plotly Express** for an interactive dashboard.
 
 ---
 
-## 🛠 Tech Stack  
+## 🔹 Features
+
+✅ **ML-Powered Predictions** – Predict delays based on trained data  
+✅ **Live Weather Integration** – Real-time weather from OpenWeatherMap  
+✅ **Admin Dashboard** – View predictions using Flask-Admin  
+✅ **Secure Login** – Passwords hashed using Flask-Bcrypt  
+✅ **Interactive Dashboard** – Built with Dash and Plotly Express  
+✅ **REST API** – JSON-based prediction endpoint  
+
+---
+
+## 🛠 Tech Stack
+
 - **Backend:** Flask, Flask-Login, Flask-Admin, Flask-Bcrypt  
-- **Database:** PostgreSQL with SQLAlchemy ORM  
-- **Machine Learning:** Scikit-Learn, NumPy, Pickle  
-- **Frontend:** HTML, CSS, JavaScript, Plotly.js  
-- **API Integration:** OpenWeatherMap API  
+- **ML:** XGBoost, NumPy, Pandas  
+- **Database:** PostgreSQL, SQLAlchemy ORM  
+- **Visualization:** Dash, Plotly Express  
+- **Other:** OpenWeatherMap API  
 
 ---
 
-## 🚀 Getting Started  
+## 🚀 Getting Started
 
-### 1️⃣ Clone the repo  
-```sh
-git clone https://github.com/YOUR-USERNAME/FlightDelayAI.git
+### 1️⃣ Clone the repo
+
+```bash
+git clone https://github.com/YOUR_USERNAME/FlightDelayAI.git
 cd FlightDelayAI
 ```
 
-### 2️⃣ Install dependencies  
-```sh
+### 2️⃣ Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Set up PostgreSQL & configure `config.py`  
-- Create a PostgreSQL database:  
-  ```sql
-  CREATE DATABASE flight_delay_db;
-  ```
-- Update `DATABASE_URI` in `config.py`:  
-  ```py
-  DATABASE_URI = "postgresql://your_username:your_password@localhost/flight_delay_db"
-  ```
+### 3️⃣ Set up PostgreSQL & configure `config.py`
 
-### 4️⃣ Run the app  
-```sh
+- Create a PostgreSQL database:
+
+```sql
+CREATE DATABASE flight_delay_db;
+```
+
+- Update `config.py` with your details:
+
+```python
+DATABASE_URI = "postgresql://your_username:your_password@localhost/flight_delay_db"
+SECRET_KEY = "your_secret_key"
+WEATHER_API_KEY = "your_openweathermap_api_key"
+```
+
+📝 *Tip: Rename `config.py` to `config_template.py` before pushing to GitHub, and ignore `config.py` via `.gitignore`.*
+
+### 4️⃣ Train the ML Model
+
+```bash
+python models/train_model.py
+```
+
+➡️ This will generate `model.pkl` inside the `models/` folder.
+
+### 5️⃣ Run the Flask App
+
+```bash
 python app.py
 ```
-The application will be available at `http://127.0.0.1:5000/`  
 
----
+📍 Opens at: `http://127.0.0.1:5000/`  
+This includes:
+- Prediction form
+- Admin login & dashboard
+- REST API endpoint `/predict`
 
-## 📊 Dashboard Preview  
+### 6️⃣ Run the Dash Dashboard
 
-![Flight Delay Dashboard](assets/dashboard1.jpg) 
-![Flight Delay Dashboard](assets/dashboard2.jpg) 
-![Flight Delay Dashboard](assets/predictionpage.jpg) 
+In a **new terminal**, run:
 
----
-
-## 🔧 API Endpoints  
-
-### ➤ **Predict Flight Delay**  
-**Endpoint:** `/predict`  
-**Method:** `POST`  
-**Request JSON:**  
-```json
-{
-    "airline": "American Airlines",
-    "origin": "JFK",
-    "destination": "LAX",
-    "flight_duration": 5.5,
-    "congestion": 3.2,
-    "aircraft_type": "Boeing 737"
-}
-```
-**Response:**  
-```json
-{
-    "delay_prediction": 12.5
-}
+```bash
+python dashboard.py
 ```
 
+📍 Opens at: `http://127.0.0.1:8050/`  
+Visualizes:
+- Weather impact on delays
+- Congestion patterns
+- Route-based averages
+- Time series trends
+
 ---
 
-## ⭐ Contribute & Support  
-💡 Found a bug? Have an idea? Open an issue or submit a pull request!  
+## 📊 Dashboard Preview
 
-**🚀 Star this repo if you find it useful!** 🌟  
+![Dashboard 1](assets/dashboard1.jpg)  
+![Dashboard 2](assets/dashboard2.jpg)  
+![Prediction Page](assets/predictionpage.jpg)
 
 ---
+
+## 🔧 API Endpoint
+
+### ➤ Predict Flight Delay
+
+- **Endpoint:** `/predict`
+- **Method:** `POST`
+- **Content-Type:** `application/json`
+
+**Request Example:**
+
+```json
+{
+  "airline": "American Airlines",
+  "origin": "JFK",
+  "destination": "LAX",
+  "flight_duration": 5.5,
+  "congestion": 3.2,
+  "aircraft_type": "Boeing 737"
+}
+```
+
+**Response:**
+
+```json
+{
+  "delay_prediction": 12.5
+}
+```
+
+---
+
+## 🙌 Contribute & Support
+
+💡 Found a bug or have a suggestion?  
+Create an issue or submit a pull request.
+
+⭐ **Star this repo** if you found it helpful!
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
