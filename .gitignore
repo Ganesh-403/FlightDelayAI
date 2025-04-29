@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# VSCode settings (optional)
+.vscode/
+
+# Environment files
+.env
+*.env
+
+# Flask migrations cache
+migrations/__pycache__/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Secrets (in case you accidentally write one)
+config.py
