@@ -4,32 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Delay Predictor</title>
+    <title>FlightDelayAI | Predict Delay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Flight Delay Predictor</h1>
+        <h1>FlightDelayAI</h1>
+        
         <form id="predictionForm">
-            <label for="airline">Airline:</label>
-            <input type="text" id="airline" name="airline" placeholder="IndiGo" required><br>
+            <div class="form-group">
+                <label for="airline">Airline</label>
+                <input type="text" id="airline" name="airline" placeholder="e.g. American Airlines" required>
+            </div>
             
-            <label for="origin">Origin (Airport Code):</label>
-            <input type="text" id="origin" name="origin" placeholder="DEL" required><br>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label for="origin">Origin</label>
+                    <input type="text" id="origin" name="origin" placeholder="JFK" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <input type="text" id="destination" name="destination" placeholder="LAX" required>
+                </div>
+            </div>
             
-            <label for="destination">Destination (Airport Code):</label>
-            <input type="text" id="destination" name="destination" placeholder="BOM" required><br>
+            <div class="form-group">
+                <label for="flight_duration">Flight Duration (minutes)</label>
+                <input type="number" id="flight_duration" name="flight_duration" placeholder="e.g. 330" required>
+            </div>
             
-            <label for="flight_duration">Flight Duration (mins):</label>
-            <input type="number" id="flight_duration" name="flight_duration" required><br>
+            <div class="form-group">
+                <label for="congestion">Congestion Level (1-10)</label>
+                <input type="number" id="congestion" name="congestion" placeholder="e.g. 5" required>
+            </div>
             
-            <label for="congestion">Congestion Level:</label>
-            <input type="number" id="congestion" name="congestion" placeholder="e.g., 3" required><br>
+            <div class="form-group">
+                <label for="aircraft_type">Aircraft Type</label>
+                <input type="text" id="aircraft_type" name="aircraft_type" placeholder="e.g. Boeing 737" required>
+            </div>
             
-            <label for="aircraft_type">Aircraft Type:</label>
-            <input type="text" id="aircraft_type" name="aircraft_type" placeholder="e.g., A320" required><br>
-            
-            <button type="button" onclick="predictDelay()">Predict Delay</button>
+            <button type="button" onclick="predictDelay()">Calculate Prediction</button>
         </form>
 
         <div id="result"></div>
@@ -37,6 +53,12 @@
 
     <script>
         function predictDelay() {
+            const resultDiv = document.getElementById("result");
+            const btn = document.querySelector("button");
+            
+            btn.innerText = "Analyzing Data...";
+            btn.disabled = true;
+
             const data = {
                 airline: document.getElementById("airline").value,
                 origin: document.getElementById("origin").value,
@@ -53,10 +75,19 @@
             })
             .then(response => response.json())
             .then(result => {
-                document.getElementById("result").innerHTML = 
-                    "<h2>Predicted Delay: " + result.delay_prediction + " minutes</h2>";
+                resultDiv.innerHTML = `
+                    <h2>Predicted Delay</h2>
+                    <span class="prediction-value">${result.delay_prediction.toFixed(1)} <small style="font-size: 0.5em">minutes</small></span>
+                `;
+                resultDiv.classList.add("show");
+                btn.innerText = "Calculate Prediction";
+                btn.disabled = false;
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+                console.error("Error:", error);
+                btn.innerText = "Calculate Prediction";
+                btn.disabled = false;
+            });
         }
     </script>
 </body>
