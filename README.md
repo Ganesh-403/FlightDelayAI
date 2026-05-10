@@ -1,148 +1,91 @@
-# ✈ FlightDelayAI – Predict Flight Delays with Machine Learning 🚀
+# ✈️ FlightDelayAI – Premium Flight Delay Analytics & Prediction 🚀
 
-FlightDelayAI is a **machine learning-powered web application** that predicts flight delays based on factors like **weather conditions, airport congestion, flight duration, and aircraft type**. It uses **Flask** for the backend, **PostgreSQL** for data storage, and **Dash/Plotly Express** for an interactive dashboard.
+FlightDelayAI is a **state-of-the-art, full-stack machine learning application** designed to predict flight delays with precision. Featuring a high-end "Glassmorphism" UI and a comprehensive analytics dashboard, it provides real-time insights into the factors causing flight disruptions.
 
 ---
 
-## 🔹 Features
+## 🎨 Premium Features
 
-✅ **ML-Powered Predictions** – Predict delays based on trained data  
-✅ **Live Weather Integration** – Real-time weather from OpenWeatherMap  
-✅ **Admin Dashboard** – View predictions using Flask-Admin  
-✅ **Secure Login** – Passwords hashed using Flask-Bcrypt  
-✅ **Interactive Dashboard** – Built with Dash and Plotly Express  
-✅ **REST API** – JSON-based prediction endpoint  
+✅ **AI-Powered Predictions** – Real-time XGBoost model analysis.  
+✅ **Interactive Analytics** – Dash-powered dashboard with dark-themed visualizations.  
+✅ **Glassmorphism UI** – Modern, immersive frontend with smooth animations.  
+✅ **Live History Sidebar** – Dynamically updates as new predictions are made.  
+✅ **Secure Admin Panel** – Manage users and records via a protected Flask-Admin interface.  
+✅ **Weather Integration** – Real-time weather data via OpenWeatherMap API.  
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Backend:** Flask, Flask-Login, Flask-Admin, Flask-Bcrypt  
-- **ML:** XGBoost, NumPy, Pandas  
-- **Database:** PostgreSQL, SQLAlchemy ORM  
-- **Visualization:** Dash, Plotly Express  
-- **Other:** OpenWeatherMap API  
+- **Backend:** Flask, SQLAlchemy ORM, Flask-Login, Flask-Bcrypt
+- **Frontend:** Glassmorphism CSS, Jinja2, Inter Typography
+- **Analytics:** Dash, Plotly Express, Dash Bootstrap Components
+- **ML Engine:** XGBoost, Scikit-Learn, Pandas, NumPy
+- **Database:** PostgreSQL
 
 ---
 
 ## 🚀 Getting Started
 
-### 1️⃣ Clone the repo
-
-```bash
-git clone https://github.com/YOUR_USERNAME/FlightDelayAI.git
-cd FlightDelayAI
-```
-
-### 2️⃣ Install dependencies
-
-```bash
+### 1️⃣ Environment Setup
+Create and activate a fresh virtual environment:
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Set up PostgreSQL & configure `config.py`
-
-- Create a PostgreSQL database:
-
-```sql
-CREATE DATABASE flight_delay_db;
-```
-
-- Update `config.py` with your details:
-
+### 2️⃣ Configure `config.py`
+Update your PostgreSQL credentials and API key:
 ```python
-DATABASE_URI = "postgresql://your_username:your_password@localhost/flight_delay_db"
+DATABASE_URI = "postgresql://postgres:your_password@localhost:5432/flight_delay_db"
 SECRET_KEY = "your_secret_key"
-WEATHER_API_KEY = "your_openweathermap_api_key"
+WEATHER_API_KEY = "your_openweathermap_key"
 ```
 
-📝 *Tip: Rename `config.py` to `config_template.py` before pushing to GitHub, and ignore `config.py` via `.gitignore`.*
+### 3️⃣ Initialize Database & Admin
+Run the seeding script to create the database tables and the initial admin user:
+```powershell
+python create_admin.py
+```
+*Default Credentials: **admin** / **admin123***
 
-### 4️⃣ Train the ML Model
-
-```bash
+### 4️⃣ Train the AI Model
+```powershell
 python models/train_model.py
 ```
 
-➡️ This will generate `model.pkl` inside the `models/` folder.
+---
 
-### 5️⃣ Run the Flask App
+## 🚦 Running the Application
 
-```bash
+FlightDelayAI uses a dual-server architecture. You must run both commands in separate terminals:
+
+### ➤ Main Prediction App (Flask)
+```powershell
 python app.py
 ```
+📍 **Access at:** [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-📍 Opens at: `http://127.0.0.1:5000/`  
-This includes:
-- Prediction form
-- Admin login & dashboard
-- REST API endpoint `/predict`
-
-### 6️⃣ Run the Dash Dashboard
-
-In a **new terminal**, run:
-
-```bash
+### ➤ Analytics Dashboard (Dash)
+```powershell
 python dashboard.py
 ```
-
-📍 Opens at: `http://127.0.0.1:8050/`  
-Visualizes:
-- Weather impact on delays
-- Congestion patterns
-- Route-based averages
-- Time series trends
+📍 **Access at:** [http://127.0.0.1:8050](http://127.0.0.1:8050)
 
 ---
 
-## 📊 Dashboard Preview
+## 🔧 Project Structure
 
-![Dashboard 1](assets/dashboard1.jpg)  
-![Dashboard 2](assets/dashboard2.jpg)  
-![Prediction Page](assets/predictionpage.jpg)
-
----
-
-## 🔧 API Endpoint
-
-### ➤ Predict Flight Delay
-
-- **Endpoint:** `/predict`
-- **Method:** `POST`
-- **Content-Type:** `application/json`
-
-**Request Example:**
-
-```json
-{
-  "airline": "American Airlines",
-  "origin": "JFK",
-  "destination": "LAX",
-  "flight_duration": 5.5,
-  "congestion": 3.2,
-  "aircraft_type": "Boeing 737"
-}
-```
-
-**Response:**
-
-```json
-{
-  "delay_prediction": 12.5
-}
-```
+- `app.py`: Main Flask server and API endpoints.
+- `dashboard.py`: Interactive Dash analytics application.
+- `models.py`: Database schema for Users and Predictions.
+- `config.py`: Environment and API configurations.
+- `templates/`: HTML templates (Home, Login).
+- `static/`: Premium CSS styling and assets.
+- `models/`: Machine learning training scripts and serialized model.
 
 ---
 
-## 🙌 Contribute & Support
-
-💡 Found a bug or have a suggestion?  
-Create an issue or submit a pull request.
-
+## 🙌 Support
 ⭐ **Star this repo** if you found it helpful!
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.

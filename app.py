@@ -27,7 +27,27 @@ migrate = Migrate(app, db)
 # Initialize LoginManager
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"  # Redirect unauthorized users to login
+login_manager.login_view = "login"
+
+# ----------------- Admin Configuration -----------------
+class SecureModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login'))
+
+class UserAdminView(SecureModelView):
+    column_exclude_list = ['password']
+    form_excluded_columns = ['password']
+
+class PredictionAdminView(SecureModelView):
+    column_default_sort = ('id', True)
+    column_filters = ['airline', 'origin', 'destination']
+
+admin = Admin(app, name='FlightDelayAI Admin', template_mode='bootstrap4')
+admin.add_view(UserAdminView(User, db.session))
+admin.add_view(PredictionAdminView(Prediction, db.session))
 
 
 # ----------------- Load the ML Model -----------------
@@ -108,6 +128,20 @@ def predict():
     db.session.commit()
     
     return jsonify({'delay_prediction': float(prediction)})
+
+@app.route('/recent_predictions', methods=['GET'])
+def get_recent_predictions():
+    """Fetches the 5 most recent predictions from the database."""
+    predictions = Prediction.query.order_by(Prediction.id.desc()).limit(5).all()
+    data = []
+    for p in predictions:
+        data.append({
+            'airline': p.airline,
+            'origin': p.origin,
+            'destination': p.destination,
+            'delay': round(p.delay, 1)
+        })
+    return jsonify(data)
 
 @app.route('/')
 def index():
