@@ -21,6 +21,7 @@ services:
     volumes:
       - ./backend:/app
       - ./ml:/ml
+      - ./data:/app/data
     ports:
       - "5000:5000"
     environment:
