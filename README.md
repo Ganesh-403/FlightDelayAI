@@ -92,9 +92,23 @@ docker-compose up --build
 
 ## 💎 Resume Worthy Tech
 **SDE / ML / Full-Stack Proficiency:**
-*   **Patterns**: Service Layer, Repository Pattern, App Factory.
-*   **MLOps**: Feature Store logic, Model Metrics Tracking.
 *   **UX**: Glassmorphism, Responsive Dark Mode, Async Feedback Loops.
+
+---
+
+## 🛠️ Detailed System Design Decisions
+
+- **Why Flask + Blueprints?**: While FastAPI is modern, Flask with Blueprints is the industry standard for stable, large-scale enterprise Python applications, providing better compatibility with legacy enterprise extensions like Flask-Admin.
+- **Why React + Vite?**: Vite offers near-instant hot module replacement (HMR), significantly improving developer experience over traditional Webpack-based CRA.
+- **Why XAI (SHAP)?**: Most ML models are "black boxes." By integrating SHAP, we provide **transparency**, allowing users to see exactly which factors (e.g., high congestion + rain) are driving the delay prediction.
+
+---
+
+## 🛤️ Future Roadmap
+
+- [ ] **Kubernetes Orchestration**: Migrating from Docker Compose to K8s for auto-scaling.
+- [ ] **Real-time WebSockets**: Replacing polling with Socket.io for instantaneous dashboard updates.
+- [ ] **Model Drift Monitoring**: Implementing Prometheus alerts when model accuracy drops below a threshold.
 
 ---
 🚀 *Engineered for performance. Built for the future of aviation analytics.*
