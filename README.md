@@ -1,91 +1,100 @@
-# ✈️ FlightDelayAI – Premium Flight Delay Analytics & Prediction 🚀
+# ✈️ FlightDelay.OS: Enterprise Flight Prediction Infrastructure
 
-FlightDelayAI is a **state-of-the-art, full-stack machine learning application** designed to predict flight delays with precision. Featuring a high-end "Glassmorphism" UI and a comprehensive analytics dashboard, it provides real-time insights into the factors causing flight disruptions.
-
----
-
-## 🎨 Premium Features
-
-✅ **AI-Powered Predictions** – Real-time XGBoost model analysis.  
-✅ **Interactive Analytics** – Dash-powered dashboard with dark-themed visualizations.  
-✅ **Glassmorphism UI** – Modern, immersive frontend with smooth animations.  
-✅ **Live History Sidebar** – Dynamically updates as new predictions are made.  
-✅ **Secure Admin Panel** – Manage users and records via a protected Flask-Admin interface.  
-✅ **Weather Integration** – Real-time weather data via OpenWeatherMap API.  
+FlightDelay.OS is a **production-grade machine learning platform** designed for aviation delay forecasting. This project has been refactored from a monolithic prototype into a modular, scalable, and observable ecosystem suitable for enterprise-level deployment.
 
 ---
 
-## 🛠 Tech Stack
+## 🏗️ System Architecture
 
-- **Backend:** Flask, SQLAlchemy ORM, Flask-Login, Flask-Bcrypt
-- **Frontend:** Glassmorphism CSS, Jinja2, Inter Typography
-- **Analytics:** Dash, Plotly Express, Dash Bootstrap Components
-- **ML Engine:** XGBoost, Scikit-Learn, Pandas, NumPy
-- **Database:** PostgreSQL
+The application is built using a **Modular Service-Oriented Architecture** to ensure high availability and maintainability.
+
+```mermaid
+graph TD
+    subgraph "Frontend Layer"
+        Web[React + Vite UI]
+    end
+
+    subgraph "API Layer (Flask Blueprints)"
+        API[Core API]
+        Auth[Auth Service]
+    end
+
+    subgraph "Intelligence Layer"
+        ML[XGBoost Inference]
+        Weather[OpenWeather API]
+    end
+
+    subgraph "Storage Layer"
+        DB[(PostgreSQL)]
+        Data[(Flight Datasets)]
+    end
+
+    Web --> API
+    API --> Auth
+    API --> ML
+    ML --> Data
+    API --> Weather
+    API --> DB
+```
 
 ---
 
-## 🚀 Getting Started
+## 🌟 Premium Engineering Features
 
-### 1️⃣ Environment Setup
-Create and activate a fresh virtual environment:
-```powershell
+- **🚀 Modular Backend**: Versioned API endpoints using Flask Blueprints and a dedicated Service Layer.
+- **⚛️ Modern Frontend**: Built with **React 18, Vite, and Tailwind CSS**. Features high-end Glassmorphism and Framer Motion animations.
+- **🧠 ML Reproducibility**: Unified Feature Engineering layer and versioned model registry.
+- **🔒 Security Hardened**: Centralized config with **Pydantic Settings**, URL-encoded credentials, and JWT-ready JSON auth.
+- **📊 Advanced Analytics**: Standalone Dash analytics service with statistical trendlines and performance metrics.
+- **🐳 DevOps Ready**: Full **Docker & Docker Compose** support for one-command deployment.
+
+---
+
+## 🚦 Getting Started
+
+### 1️⃣ Clone and Prepare
+```bash
 python -m venv venv
-.\venv\Scripts\activate
+source venv/bin/activate  # or .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2️⃣ Configure `config.py`
-Update your PostgreSQL credentials and API key:
-```python
-DATABASE_URI = "postgresql://postgres:your_password@localhost:5432/flight_delay_db"
-SECRET_KEY = "your_secret_key"
-WEATHER_API_KEY = "your_openweathermap_key"
+### 2️⃣ Initialize Infrastructure
+Configure your `.env` or `config.py` with your PostgreSQL and OpenWeather API keys, then seed the system:
+```bash
+cd backend
+python seed.py
 ```
 
-### 3️⃣ Initialize Database & Admin
-Run the seeding script to create the database tables and the initial admin user:
-```powershell
-python create_admin.py
-```
-*Default Credentials: **admin** / **admin123***
+### 3️⃣ Launch the Ecosystem
+You can run the components individually or via Docker:
 
-### 4️⃣ Train the AI Model
-```powershell
-python models/train_model.py
+*   **API Server**: `python backend/run.py` (Port 5000)
+*   **Analytics**: `python backend/analytics.py` (Port 8050)
+*   **Web Client**: `cd frontend && npm run dev` (Port 5173)
+
+**Docker Deployment:**
+```bash
+docker-compose up --build
 ```
 
 ---
 
-## 🚦 Running the Application
+## 🔧 Project Organization
 
-FlightDelayAI uses a dual-server architecture. You must run both commands in separate terminals:
-
-### ➤ Main Prediction App (Flask)
-```powershell
-python app.py
-```
-📍 **Access at:** [http://127.0.0.1:5000](http://127.0.0.1:5000)
-
-### ➤ Analytics Dashboard (Dash)
-```powershell
-python dashboard.py
-```
-📍 **Access at:** [http://127.0.0.1:8050](http://127.0.0.1:8050)
+- `backend/`: Core logic, API v1, and Analytics service.
+- `frontend/`: Modern React SPA (Single Page Application).
+- `ml/`: Reproducible training pipelines and model artifacts.
+- `scripts/`: Data generation and seeding utilities.
+- `docker/`: Production deployment configurations.
 
 ---
 
-## 🔧 Project Structure
-
-- `app.py`: Main Flask server and API endpoints.
-- `dashboard.py`: Interactive Dash analytics application.
-- `models.py`: Database schema for Users and Predictions.
-- `config.py`: Environment and API configurations.
-- `templates/`: HTML templates (Home, Login).
-- `static/`: Premium CSS styling and assets.
-- `models/`: Machine learning training scripts and serialized model.
+## 💎 Resume Worthy Tech
+**SDE / ML / Full-Stack Proficiency:**
+*   **Patterns**: Service Layer, Repository Pattern, App Factory.
+*   **MLOps**: Feature Store logic, Model Metrics Tracking.
+*   **UX**: Glassmorphism, Responsive Dark Mode, Async Feedback Loops.
 
 ---
-
-## 🙌 Support
-⭐ **Star this repo** if you found it helpful!
+🚀 *Engineered for performance. Built for the future of aviation analytics.*

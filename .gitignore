@@ -8,9 +8,11 @@ venv/
 # VSCode settings (optional)
 .vscode/
 
-# Environment files
+# Environments
 .env
-*.env
+.venv
+venv/
+ENV/
 
 # Flask migrations cache
 migrations/__pycache__/
