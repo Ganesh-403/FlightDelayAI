@@ -15,8 +15,8 @@ export default function Navbar({ user, onLogout }) {
         </div>
         
         <div className="flex items-center gap-8">
-          <a href="#" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Predictions</a>
-          <a href="#" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Analytics</a>
+          <a href="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Predictions</a>
+          <a href="http://localhost:8050" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Analytics</a>
           
           <div className="h-4 w-px bg-white/10" />
           
@@ -28,9 +28,12 @@ export default function Navbar({ user, onLogout }) {
               </button>
             </div>
           ) : (
-            <button className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl transition-all shadow-lg shadow-indigo-500/20">
+            <a 
+              href="http://localhost:5000/admin" 
+              className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl transition-all shadow-lg shadow-indigo-500/20 text-white"
+            >
               Admin Login
-            </button>
+            </a>
           )}
         </div>
       </div>

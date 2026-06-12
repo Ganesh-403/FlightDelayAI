@@ -43,5 +43,16 @@ services:
     depends_on:
       - backend
 
+  analytics:
+    build: ./backend
+    command: python analytics.py
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+    ports:
+      - "8050:8050"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

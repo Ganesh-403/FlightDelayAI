@@ -3,7 +3,6 @@ import xgboost as xgb
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-import pickle
 import os
 import json
 from datetime import datetime
@@ -45,16 +44,14 @@ def train_model(data_path: str, model_output_path: str):
     
     # Save Model
     os.makedirs(os.path.dirname(model_output_path), exist_ok=True)
-    with open(model_output_path, "wb") as f:
-        pickle.dump(model, f)
+    model.get_booster().save_model(model_output_path)
         
     # Save Metrics Report
-    report_path = model_output_path.replace(".pkl", "_metrics.json")
+    report_path = model_output_path.replace(".json", "_metrics.json")
     with open(report_path, "w") as f:
         json.dump(metrics, f, indent=2)
         
     print(f"Model saved to {model_output_path}")
 
 if __name__ == "__main__":
-    # In a real pipeline, these would be args or env vars
-    train_model("data/flight_data.csv", "ml/models/v1_model.pkl")
+    train_model("data/flight_data.csv", "ml/models/v1_model.json")

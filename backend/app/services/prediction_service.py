@@ -13,14 +13,17 @@ from ..core.config import settings
 from ..models.prediction import Prediction
 from ..models.base import db
 
+import xgboost as xgb
+
 class PredictionService:
     def __init__(self):
         self.fe = FeatureEngineer()
-        self.model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../ml/models/v1_model.pkl"))
+        self.model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../ml/models/v1_model.json"))
+        self.model = xgb.XGBRegressor()
         try:
-            with open(self.model_path, "rb") as f:
-                self.model = pickle.load(f)
-        except:
+            self.model.load_model(self.model_path)
+        except Exception as e:
+            print(f"Model Load Error: {e}")
             self.model = None
 
     def fetch_weather(self, airport_code):
