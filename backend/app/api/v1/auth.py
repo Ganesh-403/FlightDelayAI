@@ -7,6 +7,30 @@ from ... import bcrypt
 
 auth_bp = Blueprint("auth", __name__)
 
+@auth_bp.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+    if not data or not data.get("username") or not data.get("password"):
+        return jsonify({"msg": "Missing credentials"}), 400
+        
+    existing_user = User.query.filter_by(username=data["username"]).first()
+    if existing_user:
+        return jsonify({"msg": "Username already exists"}), 400
+        
+    hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
+    new_user = User(
+        username=data["username"],
+        password=hashed_password
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    
+    login_user(new_user)
+    return jsonify({
+        "msg": "Registration successful",
+        "user": {"username": new_user.username, "is_admin": new_user.is_admin}
+    }), 201
+
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()

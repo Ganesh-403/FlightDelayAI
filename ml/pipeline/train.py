@@ -16,6 +16,7 @@ def train_model(data_path: str, model_output_path: str):
     
     # Feature Engineering
     fe = FeatureEngineer()
+    fe.fit(df)
     X = fe.preprocess(df)
     y = df['delay']
     
@@ -45,6 +46,10 @@ def train_model(data_path: str, model_output_path: str):
     # Save Model
     os.makedirs(os.path.dirname(model_output_path), exist_ok=True)
     model.get_booster().save_model(model_output_path)
+    
+    # Save Feature Engineer Medians
+    medians_path = os.path.join(os.path.dirname(model_output_path), "medians.json")
+    fe.save_medians(medians_path)
         
     # Save Metrics Report
     report_path = model_output_path.replace(".json", "_metrics.json")

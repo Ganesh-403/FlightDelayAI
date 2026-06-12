@@ -14,6 +14,7 @@ class Prediction(db.Model):
     delay = db.Column(db.Float, nullable=False)
     confidence_score = db.Column(db.Float, default=1.0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
 
     def to_dict(self):
         return {
@@ -21,6 +22,11 @@ class Prediction(db.Model):
             "airline": self.airline,
             "origin": self.origin,
             "destination": self.destination,
+            "flight_duration": self.flight_duration,
+            "congestion": self.congestion,
+            "aircraft_type": self.aircraft_type,
             "delay": self.delay,
-            "created_at": self.created_at.isoformat()
+            "confidence_score": self.confidence_score,
+            "created_at": self.created_at.isoformat(),
+            "user_id": self.user_id
         }

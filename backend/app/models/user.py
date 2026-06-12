@@ -10,5 +10,8 @@ class User(UserMixin, db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     
+    # Relationships
+    predictions = db.relationship('Prediction', backref='user', lazy=True)
+    
     def __repr__(self):
         return f"<User {self.username}>"

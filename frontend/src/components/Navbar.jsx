@@ -22,18 +22,18 @@ export default function Navbar({ user, onLogout }) {
           
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="text-sm text-slate-400">Welcome, <span className="text-indigo-400">{user.username}</span></span>
-              <button onClick={onLogout} className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
+              <span className="text-sm text-slate-400">Welcome, <span className="text-indigo-400 font-bold">{user.username}</span></span>
+              <button onClick={onLogout} className="p-2 hover:bg-white/5 rounded-lg transition-colors group cursor-pointer" title="Log Out">
                 <LogOut className="w-4 h-4 text-slate-400 group-hover:text-red-400" />
               </button>
             </div>
           ) : (
-            <a 
-              href="http://localhost:5000/admin" 
-              className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl transition-all shadow-lg shadow-indigo-500/20 text-white"
+            <button 
+              onClick={onLoginClick}
+              className="text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl transition-all shadow-lg shadow-indigo-500/20 text-white cursor-pointer"
             >
-              Admin Login
-            </a>
+              Sign In
+            </button>
           )}
         </div>
       </div>

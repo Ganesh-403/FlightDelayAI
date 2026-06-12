@@ -1,6 +1,8 @@
-# dashboard.py
+# backend/analytics.py
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
+import os
+import sys
 import dash
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
@@ -8,22 +10,18 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 
-# Load the dataset
-df = pd.read_csv("data/flight_data.csv")
+# Import Flask app and models
+from app import create_app, db
+from app.models.prediction import Prediction
 
-# Preprocessing
-if 'route' not in df.columns:
-    df['route'] = df['origin'].astype(str) + "-" + df['destination'].astype(str)
+flask_app = create_app()
 
-df["congestion"] = pd.to_numeric(df["congestion"], errors="coerce")
-df["delay"] = pd.to_numeric(df["delay"], errors="coerce")
+# Load initial historical dataset
+df_csv = pd.read_csv("data/flight_data.csv")
 
-if 'weather' not in df.columns:
-    df['weather'] = "Clear"
-
-# Initialize the Dash app with a dark theme
+# Initialize the Dash app with Cyborg dark theme
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
-app.title = "FlightDelayAI | Analytics"
+app.title = "FlightDelay.OS | Live Analytics Dashboard"
 
 # Custom Plotly Theme
 PLOTLY_TEMPLATE = "plotly_dark"
@@ -32,9 +30,9 @@ CHART_COLOR_SEQUENCE = px.colors.qualitative.Pastel
 # Layout components
 header = html.Div(
     [
-        html.H2("FlightDelayAI Analytics", className="display-4 text-primary"),
+        html.H2("FlightDelay.OS Analytics Dashboard", className="display-4 text-primary"),
         html.P(
-            "Real-time insights into flight performance and delay patterns.",
+            "Live insights combining training history and real-time inference delays.",
             className="lead text-muted",
         ),
         html.Hr(className="my-4", style={"borderColor": "#4f46e5"}),
@@ -57,6 +55,12 @@ def create_card(title, chart_id):
 
 app.layout = dbc.Container([
     header,
+    # Auto-refresh component every 5 seconds
+    dcc.Interval(
+        id='interval-component',
+        interval=5 * 1000,
+        n_intervals=0
+    ),
     dbc.Row([
         dbc.Col(create_card("Average Delay by Route", "route-delay-chart"), md=6),
         dbc.Col(create_card("Weather Impact on Delays", "weather-chart"), md=6),
@@ -72,9 +76,49 @@ app.layout = dbc.Container([
     Output('weather-chart', 'figure'),
     Output('congestion-chart', 'figure'),
     Output('time-series-chart', 'figure'),
-    Input('route-delay-chart', 'id')
+    Input('interval-component', 'n_intervals')
 )
-def update_charts(_):
+def update_charts(n):
+    # Fetch real-time predictions from DB
+    with flask_app.app_context():
+        try:
+            db_predictions = Prediction.query.all()
+            db_data = []
+            for p in db_predictions:
+                db_data.append({
+                    "airline": p.airline,
+                    "origin": p.origin,
+                    "destination": p.destination,
+                    "flight_duration": p.flight_duration,
+                    "congestion": p.congestion,
+                    "aircraft_type": p.aircraft_type,
+                    "delay": p.delay,
+                    "weather": "Clear", # default weather label
+                    "scheduled_time": p.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    "temperature": 25,
+                    "humidity": 50
+                })
+            df_db = pd.DataFrame(db_data)
+        except Exception as e:
+            print(f"Database Query Error in Dash: {e}")
+            df_db = pd.DataFrame()
+
+    # Combine CSV data with DB data
+    if not df_db.empty:
+        df = pd.concat([df_csv, df_db], ignore_index=True)
+    else:
+        df = df_csv.copy()
+
+    # Preprocessing
+    if 'route' not in df.columns:
+        df['route'] = df['origin'].astype(str) + "-" + df['destination'].astype(str)
+
+    df["congestion"] = pd.to_numeric(df["congestion"], errors="coerce")
+    df["delay"] = pd.to_numeric(df["delay"], errors="coerce")
+
+    if 'weather' not in df.columns:
+        df['weather'] = "Clear"
+
     # Chart 1: Average Delay by Route
     route_df = df.groupby('route', as_index=False)['delay'].mean().sort_values('delay', ascending=False)
     route_fig = px.bar(
@@ -122,3 +166,4 @@ def update_charts(_):
 
 if __name__ == '__main__':
     app.run(debug=True, port=8050)
+
