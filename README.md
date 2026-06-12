@@ -1,37 +1,37 @@
-# ✈️ FlightDelay.OS: Enterprise Flight Prediction Infrastructure
+# FlightDelay.OS: Real-Time Flight Delay Prediction Infrastructure
 
-FlightDelay.OS is a **production-grade, real-time machine learning platform** designed for aviation delay forecasting and MLOps analytics. The system features a modular backend, a reactive frontend dashboard, a stateful ML feature pipeline, caching strategies, and real-time model drift monitoring.
+FlightDelay.OS is a modular machine learning platform designed for flight delay forecasting and MLOps metrics analysis. The system is built with a decoupled services architecture, integrating a machine learning inference pipeline, distributed weather caching, real-time client updates, and statistical model drift monitoring.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
-The application is built using a **Service-Oriented Architecture** ensuring loose coupling, caching performance, and database portability.
+The platform uses a decoupled service-oriented architecture to separate ingestion, caching, inference, and persistence layers.
 
 ```mermaid
 graph TD
     subgraph "Client Layer"
-        SPA[React 19 + Vite SPA]
+        SPA[React SPA]
     end
 
-    subgraph "API Gateway & Real-time Layer"
+    subgraph "API Gateway & Messaging"
         Flask[Flask API Gateway]
-        WS[Flask-SocketIO Event Server]
+        WS[Flask-SocketIO Server]
     end
 
-    subgraph "Intelligence & Cache Layer"
+    subgraph "Inference & Cache Layer"
         XGB[XGBoost Inference Engine]
-        SHAP[SHAP TreeExplainer XAI]
+        SHAP[SHAP TreeExplainer]
         Redis[(Redis Weather Cache)]
         OWM[OpenWeather API]
     end
 
     subgraph "Persistence Layer"
         DB[(PostgreSQL / SQLite Fallback)]
-        CSV[(Historical CSV Data)]
+        CSV[(Historical CSV Dataset)]
     end
 
-    SPA <-->|REST HTTP Requests / WebSockets| Flask
+    SPA <-->|REST HTTP / WebSockets| Flask
     Flask --> WS
     Flask --> XGB
     XGB --> SHAP
@@ -43,83 +43,82 @@ graph TD
 
 ---
 
-## 🌟 Premium Engineering Features
+## Core Features
 
-- **🚀 Modular Flask Gateway**: Versioned REST endpoints (API v1) with strict **Pydantic v2 validation** of incoming IATA inputs and request structures.
-- **⚛️ Modern React 19 SPA**: Built with **Vite** and **Tailwind CSS v4**. Utilizes Glassmorphic elements, dynamic **Recharts** timeline plots, and smooth Framer Motion micro-animations.
-- **⚡ Real-time WebSockets**: Employs **Flask-SocketIO** and **Socket.io-client** to broadcast newly generated flight delay predictions to all active clients, instantly updating history lists and metrics.
-- **🧠 SHAP Explainable AI (XAI)**: Calculates local feature contributions (Duration, Congestion, Weather, and Humidity) for every prediction on-the-fly using `shap.TreeExplainer`, visualising positive/negative delay factors in a sleek progress breakdown.
-- **💾 Redis Cache**: Caches OpenWeather API responses for 15 minutes, avoiding endpoint rate-limit exhaustion and slashing response times from ~300ms to <10ms.
-- **📊 Live Analytics**: A standalone **Dash Dashboard** running under Flask application context that polls the database every 5 seconds to merge training records with production predictions.
-- **🔒 Secure Session Auth**: Cross-origin session-based authentication modals (Login/Registration) embedded directly inside the SPA with credentialed CORS.
-- **📈 MLOps Model Drift Endpoint**: Running a **Kolmogorov-Smirnov statistical test** (`scipy.stats.ks_2samp`) comparing live predictions against training set distributions to flag data drift.
-- **🔌 Automatic DB Fallback**: Tests connection to PostgreSQL on startup. If unavailable, falls back to local SQLite automatically, simplifying onboarding.
+- **Modular API Gateway**: Versioned REST endpoints (API v1) with request schema validation using Pydantic v2.
+- **Single Page Application (SPA)**: Built with React, Vite, and Tailwind CSS. Implements interactive Recharts analytics timelines and Framer Motion state transitions.
+- **Bi-directional WebSockets**: Uses Flask-SocketIO and socket.io-client to push newly computed predictions to active clients, updating the dashboard in real-time.
+- **Explainable AI (XAI)**: Calculates local feature contributions (flight duration, airport congestion, temperature, and humidity) for each prediction using SHAP TreeExplainer, presenting the positive and negative impact metrics on the frontend.
+- **Distributed Caching**: Caches OpenWeather API responses in Redis for 15 minutes to reduce API latency and manage external request rate limits.
+- **Embedded Analytics**: Integrated Dash dashboard querying the database on a 5-second interval to combine training data and current prediction history.
+- **Session-Based Authentication**: Custom login and registration controls utilizing HTTP cookies and credential-enabled CORS.
+- **Data Drift Monitoring**: An endpoint running a two-sample Kolmogorov-Smirnov test (via SciPy) comparing live prediction delays against the training dataset baseline to flag distribution shifts.
+- **Dynamic Connection Fallback**: Verifies connection to the PostgreSQL instance at startup, falling back to a local SQLite database if the server is unreachable.
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
-| Component | Technology / Library | Description |
+| Component | Software / Library | Purpose |
 | :--- | :--- | :--- |
-| **Backend Framework** | Flask, Flask-CORS | API Gateway, blueprint-routing, CORS controls |
-| **Real-time Server** | Flask-SocketIO | Event broadcasting |
-| **Inference Engine** | XGBoost (v2.x) | Gradient boosted decision trees model |
-| **Explainable AI** | SHAP | Local feature contributions calculations |
-| **Database ORM** | Flask-SQLAlchemy, SQLite, PostgreSQL | Data layer persistence |
-| **Caching Layer** | Redis | Weather API caching |
-| **Validation Layer** | Pydantic v2 | JSON request type-safety |
-| **Analytics Server** | Dash, Plotly, Dash-Bootstrap | Statistical charts & trends server |
-| **Frontend Core** | React 19, Axios | Component rendering, credentialed HTTP calls |
-| **Visual Charts** | Recharts | Live frontend area charts |
-| **Build Tools** | Vite | Quick hot-reload bundler |
-| **Styles** | Tailwind CSS v4, Framer Motion | Styles, glassmorphism, animations |
+| **Backend Gateway** | Flask, Flask-CORS | HTTP routing, CORS controls |
+| **Real-time Gateway** | Flask-SocketIO | WebSockets message broadcasting |
+| **Inference Framework** | XGBoost | Supervised learning model execution |
+| **Model Interpretability** | SHAP | Local feature contribution analysis |
+| **Database ORM** | Flask-SQLAlchemy, PostgreSQL, SQLite | Persistence and local fallback database |
+| **Cache Store** | Redis | API response caching |
+| **Data Validation** | Pydantic v2 | Input schema validation |
+| **Visual Analytics** | Dash, Plotly, Dash-Bootstrap | Summary charts and metrics |
+| **Web SPA Core** | React, Axios | Component rendering, REST client |
+| **UI Graphs** | Recharts | Frontend data visualizations |
+| **Styles & Transitions** | Tailwind CSS, Framer Motion | Modern interface styles and animations |
 
 ---
 
-## 📁 Project Directory Layout
+## Project Directory Layout
 
 ```text
 Flight-Delay-Prediction/
 ├── backend/
 │   ├── app/
-│   │   ├── core/           # Pydantic settings and env configurations
-│   │   ├── models/         # SQLAlchemy Schemas (User, Prediction)
+│   │   ├── core/           # App settings and environment validation
+│   │   ├── models/         # Database models (User, Prediction)
 │   │   ├── services/       # XGBoost inference and Redis weather services
 │   │   └── api/            # API blueprints (Auth, Predict, Stats, Drift)
-│   ├── Dockerfile          # Backend Docker builder
-│   ├── requirements.txt    # Python requirements
-│   ├── run.py              # Backend entrypoint (Port 5000)
+│   ├── Dockerfile          # Backend container builder
+│   ├── requirements.txt    # Python dependencies
+│   ├── run.py              # Backend HTTP server (Port 5000)
 │   ├── seed.py             # Database seed script
 │   └── analytics.py        # Dash analytics dashboard (Port 8050)
 ├── frontend/
 │   ├── src/
-│   │   ├── components/     # Navbar, Form, Autocomplete list, HistoryList
-│   │   ├── App.jsx         # Dashboard hub (WebSockets, modals, Recharts)
-│   │   └── index.css       # Tailwind CSS v4 imports & glassmorphic system
+│   │   ├── components/     # React components (Navbar, Form, Autocomplete)
+│   │   ├── App.jsx         # App container (WebSockets, Auth, Recharts)
+│   │   └── index.css       # Tailwind CSS imports & global styles
 │   ├── index.html          # HTML Entrypoint
 │   └── Dockerfile          # Nginx production frontend server
 ├── ml/
-│   ├── models/             # XGBoost model artifacts and saved pipeline medians
-│   └── pipeline/           # Preprocessing (imputation) and training scripts
+│   ├── models/             # Saved models and preprocessing pipeline medians
+│   └── pipeline/           # Data cleaning and model training scripts
 ├── data/
-│   └── flight_data.csv     # Historical training dataset
+│   └── flight_data.csv     # Training dataset
 ├── scripts/
-│   └── generate_data.py    # Synthetic training data generator
-└── docker-compose.yml      # Multi-container local orchestration
+│   └── generate_data.py    # Training data generator script
+└── docker-compose.yml      # Multi-container local execution setup
 ```
 
 ---
 
-## 🚦 Installation & Setup
+## Installation and Setup
 
 ### Prerequisites
 - Python 3.11+
 - Node.js 20+
-- (Optional) Docker & Docker Compose
+- (Optional) Docker and Docker Compose
 
-### 1️⃣ Local Setup
+### 1. Local Environment Execution
 
-#### A. Set up Virtual Environment & Python dependencies
+#### A. Set up Python Virtual Environment
 ```bash
 python -m venv venv
 # On Windows
@@ -130,20 +129,19 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### B. Setup Frontend Node modules
+#### B. Install Node Dependencies
 ```bash
 cd frontend
 npm install
 cd ..
 ```
 
-#### C. Seed Database & Start Services
-Initialize the local SQLite database and populate dummy metrics:
+#### C. Seed Database and Start Services
+Seed the fallback SQLite database:
 ```bash
 python backend/seed.py
 ```
-
-Launch the stack using multiple terminal windows:
+Start the application services in separate terminals:
 ```bash
 # 1. API Server (Port 5000)
 python backend/run.py
@@ -158,64 +156,64 @@ npm run dev
 
 ---
 
-### 2️⃣ Docker Compose Deployment
+### 2. Containerized Deployment (Docker Compose)
 
-To build and launch the backend (Flask), frontend (Nginx), analytics dashboard (Dash), database (PostgreSQL), and cache (Redis) as a single multi-container application:
+To build and run all services (API, React Client, Dash Analytics, PostgreSQL, and Redis) concurrently:
 ```bash
 docker-compose up --build
 ```
-Once initialized, the services are mapped as follows:
-- **Web Client (React)**: `http://localhost:3000`
+The mapped endpoints are:
+- **React Client**: `http://localhost:3000`
 - **Backend API**: `http://localhost:5000`
 - **Dash Analytics**: `http://localhost:8050`
 - **Redis Cache**: `localhost:6379`
-- **PostgreSQL**: `localhost:5432`
+- **PostgreSQL Database**: `localhost:5432`
 
 ---
 
-## 🔒 Configuration Variables (`.env`)
+## Configuration Variables (`.env`)
 
-Create a `.env` file in the root directory to customize the environment variables:
+Configure the environment settings by creating a `.env` file in the root directory:
 ```ini
-# OpenWeather API Configuration
-WEATHER_API_KEY=your_openweathermap_api_key_here
+# OpenWeather API Credentials
+WEATHER_API_KEY=your_openweathermap_api_key
 
-# Database Configuration (Defaults to 'db' for Docker, falls back to SQLite locally)
+# Database Connectivity (db is default for Docker; falls back to SQLite locally)
 POSTGRES_SERVER=db
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=Ganesh@123
 POSTGRES_DB=flight_delay_db
 
-# Security Settings
-SECRET_KEY=SUPER-SECRET-REPLACE-IN-PROD-473-449
+# Application Encryption Key
+SECRET_KEY=SUPER-SECRET-KEY-REPLACE-IN-PRODUCTION
 
-# Redis Server Configuration
+# Cache Configuration
 REDIS_HOST=redis
 REDIS_PORT=6379
 ```
 
 ---
 
-## 🔬 MLOps: Metrics & Explanations
+## Statistical Analysis and Explainability
 
-### 1. Kolmogorov-Smirnov (KS) Drift Monitoring
-To check if inputs have drifted from the historical baseline:
-```bash
+### 1. Two-Sample Kolmogorov-Smirnov Test (Drift Monitoring)
+Data drift verification is exposed through the endpoint:
+```http
 GET http://localhost:5000/api/v1/predict/drift
 ```
-This performs a two-sample KS test comparing the delay values of the last 100 predictions against the training CSV delays. If $p < 0.05$, we reject the null hypothesis, suggesting that data drift has occurred and the model requires retraining.
+It computes the two-sample KS test statistic and p-value comparing the distribution of the last 100 predictions against the training set labels. A p-value less than 0.05 indicates statistical shift (drift), indicating the model should be retrained.
 
-### 2. SHAP Explanation Pipeline
-To solve the issue of black-box ML predictions, we calculate local explanations:
-$$\phi_0 + \sum_{i=1}^{M} \phi_i = f(x)$$
-Where $\phi_0$ is the base value of predictions, and $\phi_i$ represents the minutes added or subtracted by feature $i$ (e.g. Congestion, Duration, Weather, Humidity). This outputs the contribution metrics displayed in the user results dialog.
+### 2. SHAP (Shapley Additive exPlanations)
+To provide interpretability for the model predictions, the local attribution is computed:
+$$f(x) = g(z') = \phi_0 + \sum_{i=1}^{M} \phi_i z_i'$$
+Where $\phi_0$ is the model's base value and $\phi_i$ is the delay contribution (in minutes) of each input feature. The backend returns these values in the prediction payload to explain predictions inside the client interface.
 
 ---
 
-## 🛤️ Roadmap
+## Project Roadmap
 
-- [x] **Real-time WebSockets**: Interactive Socket.io updates for historical activity logs.
-- [x] **Stateful Pipeline Imputation**: Fixed ML single-row imputation bug using saved training medians.
-- [x] **Redis API Caching**: Integrated weather response caching to accelerate API execution.
-- [ ] **Kubernetes Deployment**: Migrating Docker Compose manifests into K8s charts for auto-scaling.
-- [ ] **Prometheus/Grafana Metrics**: Hooking up Prometheus scrapers to alert SREs when drift occurs.
+- [x] **Real-time WebSockets**: Client synchronization via Socket.io events.
+- [x] **Stateful Preprocessing**: Fixed inference imputation using saved training medians.
+- [x] **Inference Caching**: Weather cache layers in Redis.
+- [ ] **Kubernetes Manifests**: Helm charts for deployment orchestration.
+- [ ] **Telematic Alerting**: Automated alerts via Prometheus for identified model drift.
