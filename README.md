@@ -1,6 +1,6 @@
-# FlightDelay.OS: Real-Time Flight Delay Prediction Infrastructure
+# Flight Delay AI: Real-Time Flight Delay Prediction Infrastructure
 
-FlightDelay.OS is a modular machine learning platform designed for flight delay forecasting and MLOps metrics analysis. The system is built with a decoupled services architecture, integrating a machine learning inference pipeline, distributed weather caching, real-time client updates, and statistical model drift monitoring.
+Flight Delay AI is a modular machine learning platform designed for flight delay forecasting and MLOps metrics analysis. The system is built with a decoupled services architecture, integrating a machine learning inference pipeline, distributed weather caching, real-time client updates, and statistical model drift monitoring.
 
 ---
 

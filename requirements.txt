@@ -1,4 +1,4 @@
-# FlightDelayAI Production Requirements
+# Flight Delay AI Production Requirements
 
 # Web Framework & Extensions
 flask
@@ -29,6 +29,8 @@ psycopg2-binary
 requests
 python-dotenv
 shap
+matplotlib
 flask-socketio
 redis
-eventlet
+gevent
+gevent-websocket

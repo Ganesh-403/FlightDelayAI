@@ -1,4 +1,7 @@
 # backend/analytics.py
+from gevent import monkey
+monkey.patch_all()
+
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 import os
@@ -21,7 +24,7 @@ df_csv = pd.read_csv("data/flight_data.csv")
 
 # Initialize the Dash app with Cyborg dark theme
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
-app.title = "FlightDelay.OS | Live Analytics Dashboard"
+app.title = "Flight Delay AI | Live Analytics Dashboard"
 
 # Custom Plotly Theme
 PLOTLY_TEMPLATE = "plotly_dark"
@@ -30,7 +33,7 @@ CHART_COLOR_SEQUENCE = px.colors.qualitative.Pastel
 # Layout components
 header = html.Div(
     [
-        html.H2("FlightDelay.OS Analytics Dashboard", className="display-4 text-primary"),
+        html.H2("Flight Delay AI Analytics Dashboard", className="display-4 text-primary"),
         html.P(
             "Live insights combining training history and real-time inference delays.",
             className="lead text-muted",

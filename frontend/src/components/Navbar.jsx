@@ -10,7 +10,7 @@ export default function Navbar({ user, onLogout, onLoginClick }) {
             <Plane className="text-white w-5 h-5" />
           </div>
           <span className="text-xl font-extrabold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-            FlightDelayAI
+            Flight Delay AI
           </span>
         </div>
         
