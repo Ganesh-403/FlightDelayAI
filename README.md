@@ -210,10 +210,16 @@ Where $\phi_0$ is the model's base value and $\phi_i$ is the delay contribution 
 
 ---
 
-## Project Roadmap
+## Project Roadmap & Future Implementations
 
 - [x] **Real-time WebSockets**: Client synchronization via Socket.io events.
 - [x] **Stateful Preprocessing**: Fixed inference imputation using saved training medians.
 - [x] **Inference Caching**: Weather cache layers in Redis.
-- [ ] **Kubernetes Manifests**: Helm charts for deployment orchestration.
-- [ ] **Telematic Alerting**: Automated alerts via Prometheus for identified model drift.
+- [ ] **Multi-Service Cloud Deployment**:
+  - Deploy static React frontend client to **Vercel** or **Netlify**.
+  - Host the containerized Python/Flask API gateway to **Render** / **Koyeb** running with Gevent WSGI workers.
+  - Migrate database storage to serverless **Neon PostgreSQL** (removing SQLite dependency).
+  - Connect weather API query cache layers to serverless **Upstash Redis**.
+- [ ] **Kubernetes Manifests**: Helm charts for deployment orchestration in production clusters.
+- [ ] **Automated CI/CD**: GitHub Actions workflows for continuous integration tests and auto-deployment on git push.
+- [ ] **Telematic Alerting**: Automated alerts via Prometheus/Grafana triggered by statistical model drift indicators.
