@@ -23,3 +23,16 @@ Thumbs.db
 
 # Secrets (in case you accidentally write one)
 config.py
+
+# Databases
+*.db
+backend/*.db
+flight_delay.db
+
+# Frontend Node artifacts
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+

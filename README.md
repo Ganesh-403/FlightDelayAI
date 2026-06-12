@@ -41,12 +41,14 @@ graph TD
 
 ## 🌟 Premium Engineering Features
 
-- **🚀 Modular Backend**: Versioned API endpoints using Flask Blueprints and a dedicated Service Layer.
-- **⚛️ Modern Frontend**: Built with **React 18, Vite, and Tailwind CSS**. Features high-end Glassmorphism and Framer Motion animations.
-- **🧠 ML Reproducibility**: Unified Feature Engineering layer and versioned model registry.
-- **🔒 Security Hardened**: Centralized config with **Pydantic Settings**, URL-encoded credentials, and JWT-ready JSON auth.
-- **📊 Advanced Analytics**: Standalone Dash analytics service with statistical trendlines and performance metrics.
-- **🐳 DevOps Ready**: Full **Docker & Docker Compose** support for one-command deployment.
+- **🚀 Modular Backend**: Versioned API endpoints using Flask Blueprints, a dedicated Service Layer, and Pydantic validation.
+- **⚛️ Modern Frontend**: Built with **React 19, Vite, and Tailwind CSS v4**. Features high-end Glassmorphism, dynamic Recharts visuals, and Framer Motion animations.
+- **🧠 ML Reproducibility & XAI**: Unified Feature Engineering pipeline (with saved state medians) and real-time **SHAP Explainable AI** contribution metrics.
+- **⚡ Real-time Updates**: Instant client updates using **WebSockets (Flask-SocketIO & Socket.io-client)**.
+- **💾 Redis Weather Caching**: Accelerated predictions using **Redis caching** to save OpenWeather API requests for 15 minutes.
+- **🔒 Secure Authentication**: Integrated session-based cookie authentication modals directly in the React frontend.
+- **📊 Advanced Analytics**: Standalone Dash analytics service reading directly from the database with a 5s auto-refresh interval.
+- **🐳 DevOps Ready**: Full **Docker & Docker Compose** support for one-command deployment, plus an automatic SQLite fallback for hassle-free local development.
 
 ---
 
@@ -60,11 +62,12 @@ pip install -r requirements.txt
 ```
 
 ### 2️⃣ Initialize Infrastructure
-Configure your `.env` or `config.py` with your PostgreSQL and OpenWeather API keys, then seed the system:
+Configure your `.env` with your PostgreSQL, Redis, and OpenWeather API keys, then seed the system:
 ```bash
-cd backend
-python seed.py
+# Seeding triggers DB creation and populates initial admin/prediction profiles
+python backend/seed.py
 ```
+*(If PostgreSQL or Redis is not running locally, the application will automatically fall back to SQLite and run without cache).*
 
 ### 3️⃣ Launch the Ecosystem
 You can run the components individually or via Docker:
@@ -86,13 +89,14 @@ docker-compose up --build
 - `frontend/`: Modern React SPA (Single Page Application).
 - `ml/`: Reproducible training pipelines and model artifacts.
 - `scripts/`: Data generation and seeding utilities.
-- `docker/`: Production deployment configurations.
 
 ---
 
 ## 💎 Resume Worthy Tech
 **SDE / ML / Full-Stack Proficiency:**
-*   **UX**: Glassmorphism, Responsive Dark Mode, Async Feedback Loops.
+*   **UX**: Glassmorphism, Responsive Dark Mode, WebSockets Live Feed, Recharts Analytics.
+*   **Intelligence**: XGBoost, stateful Feature Engineering, SHAP TreeExplainer.
+*   **Infrastructure**: Redis Caching, SQLite/Postgres Dynamic Fallback.
 
 ---
 
@@ -107,7 +111,7 @@ docker-compose up --build
 ## 🛤️ Future Roadmap
 
 - [ ] **Kubernetes Orchestration**: Migrating from Docker Compose to K8s for auto-scaling.
-- [ ] **Real-time WebSockets**: Replacing polling with Socket.io for instantaneous dashboard updates.
+- [x] **Real-time WebSockets**: Replacing polling with Socket.io for instantaneous dashboard updates.
 - [ ] **Model Drift Monitoring**: Implementing Prometheus alerts when model accuracy drops below a threshold.
 
 ---
