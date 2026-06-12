@@ -165,5 +165,5 @@ def update_charts(n):
     return route_fig, weather_fig, congestion_fig, time_series_fig
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8050)
+    app.run(host="0.0.0.0", debug=True, port=8050)
 

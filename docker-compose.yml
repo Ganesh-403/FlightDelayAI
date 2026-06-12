@@ -30,6 +30,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
       - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - REDIS_HOST=redis
     depends_on:
       - db
       - redis
@@ -48,9 +49,16 @@ services:
     command: python analytics.py
     volumes:
       - ./backend:/app
+      - ./ml:/ml
       - ./data:/app/data
     ports:
       - "8050:8050"
+    environment:
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - REDIS_HOST=redis
     depends_on:
       - backend
 
