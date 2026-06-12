@@ -16,16 +16,19 @@ from ..models.prediction import Prediction
 from ..models.base import db
 
 import xgboost as xgb
+import shap
 
 class PredictionService:
     def __init__(self):
         self.fe = FeatureEngineer()
         self.model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../ml/models/v1_model.json"))
         self.model = xgb.XGBRegressor()
+        self.explainer = None
         try:
             self.model.load_model(self.model_path)
+            self.explainer = shap.TreeExplainer(self.model)
         except Exception as e:
-            print(f"Model Load Error: {e}")
+            print(f"Model/SHAP Explainer Load Error: {e}")
             self.model = None
             
         # Initialize Redis connection
@@ -99,6 +102,16 @@ class PredictionService:
         features = self.fe.get_inference_features(inference_data)
         prediction_val = float(self.model.predict(features)[0])
         
+        # Compute SHAP explanation values for the features
+        shap_contributions = {}
+        if self.explainer:
+            try:
+                shap_vals = self.explainer.shap_values(features)[0]
+                for col, val in zip(self.fe.feature_cols, shap_vals):
+                    shap_contributions[col] = float(val)
+            except Exception as e:
+                print(f"SHAP explanation calculation error: {e}")
+
         # Save to DB
         new_pred = Prediction(
             airline=data['airline'],
@@ -126,7 +139,8 @@ class PredictionService:
             "weather": weather,
             "confidence": new_pred.confidence_score,
             "created_at": new_pred.created_at.isoformat(),
-            "user_id": new_pred.user_id
+            "user_id": new_pred.user_id,
+            "shap_contributions": shap_contributions
         }
 
     def get_history(self, limit, user_id=None):

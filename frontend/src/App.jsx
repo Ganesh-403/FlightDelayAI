@@ -237,9 +237,42 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* Explainable AI (SHAP) Contribution Bars */}
+                {lastPrediction.shap_contributions && Object.keys(lastPrediction.shap_contributions).length > 0 && (
+                  <div className="w-full mt-6 text-left space-y-3 bg-white/5 p-4 rounded-2xl border border-white/5">
+                    <span className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider mb-2">AI Feature Influence (SHAP)</span>
+                    {Object.entries(lastPrediction.shap_contributions).map(([feature, val]) => {
+                      const isPositive = val >= 0;
+                      const formattedVal = val.toFixed(1);
+                      const absPercent = Math.min(100, Math.abs(val) * 10);
+                      const displayName = feature
+                        .replace('flight_duration', 'Duration')
+                        .replace('congestion', 'Congestion')
+                        .replace('temperature', 'Temperature')
+                        .replace('humidity', 'Humidity');
+                      return (
+                        <div key={feature} className="space-y-1">
+                          <div className="flex justify-between text-xs font-semibold">
+                            <span className="text-slate-300">{displayName}</span>
+                            <span className={isPositive ? 'text-rose-400' : 'text-emerald-400'}>
+                              {isPositive ? '+' : ''}{formattedVal}m
+                            </span>
+                          </div>
+                          <div className="h-1.5 w-full bg-slate-950 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full ${isPositive ? 'bg-gradient-to-r from-rose-500 to-red-400' : 'bg-gradient-to-r from-emerald-500 to-teal-400'}`}
+                              style={{ width: `${absPercent}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
                 <button 
                   onClick={() => setLastPrediction(null)}
-                  className="w-full bg-white text-slate-950 font-bold py-4 rounded-2xl mt-8 hover:bg-slate-200 transition-colors cursor-pointer"
+                  className="w-full bg-white text-slate-950 font-bold py-4 rounded-2xl mt-6 hover:bg-slate-200 transition-colors cursor-pointer"
                 >
                   Confirm & Close
                 </button>
