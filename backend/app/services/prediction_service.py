@@ -135,7 +135,7 @@ class PredictionService:
             "flight_duration": new_pred.flight_duration,
             "congestion": new_pred.congestion,
             "aircraft_type": new_pred.aircraft_type,
-            "delay_prediction": prediction_val,
+            "delay": prediction_val,
             "weather": weather,
             "confidence": new_pred.confidence_score,
             "created_at": new_pred.created_at.isoformat(),

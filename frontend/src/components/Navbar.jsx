@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plane, BarChart3, ShieldCheck, LogOut } from 'lucide-react';
 
-export default function Navbar({ user, onLogout }) {
+export default function Navbar({ user, onLogout, onLoginClick }) {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex justify-between items-center bg-slate-900/50 backdrop-blur-md border border-white/5 rounded-2xl px-6 py-3">

@@ -16,62 +16,66 @@ const AIRPORTS = [
 
 export default function AirportAutocomplete({ label, value, onChange, placeholder, required }) {
   const [query, setQuery] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const wrapperRef = useRef(null);
 
-  // Sync initial query state with standard IATA code value
+  // Sync initial query state with standard IATA code value when value changes
   useEffect(() => {
-    const selected = AIRPORTS.find((a) => a.code === value);
-    if (selected) {
-      setQuery(`${selected.code} - ${selected.city} (${selected.name})`);
-    } else if (value) {
-      setQuery(value);
-    } else {
-      setQuery('');
+    if (!isFocused) {
+      setQuery(value || '');
     }
-  }, [value]);
+  }, [value, isFocused]);
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setIsOpen(false);
-        // Reset query back to selected value if they clicked outside
-        const selected = AIRPORTS.find((a) => a.code === value);
-        if (selected) {
-          setQuery(`${selected.code} - ${selected.city}`);
-        } else {
-          setQuery(value || '');
-        }
+        setIsFocused(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [value]);
+  }, []);
 
   const handleInputChange = (e) => {
     const val = e.target.value;
     setQuery(val);
-    setIsOpen(true);
-    // Directly bubble up raw custom text in case it's a code we don't have statically
-    if (val.length === 3) {
-      onChange(val.toUpperCase());
-    }
+    setIsFocused(true);
+    // Bubble up the change on every keystroke
+    onChange(val.toUpperCase().trim());
   };
 
   const handleSelect = (airport) => {
     onChange(airport.code);
-    setQuery(`${airport.code} - ${airport.city} (${airport.name})`);
-    setIsOpen(false);
+    setQuery(airport.code);
+    setIsFocused(false);
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    // Show the actual value on focus so they can edit it
+    setQuery(value || '');
   };
 
   const filteredAirports = AIRPORTS.filter((a) => {
-    const searchTerm = query.toLowerCase();
+    const searchTerm = query.toLowerCase().trim();
+    if (!searchTerm) return true;
     return (
       a.code.toLowerCase().includes(searchTerm) ||
       a.name.toLowerCase().includes(searchTerm) ||
       a.city.toLowerCase().includes(searchTerm)
     );
   });
+
+  const getDisplayValue = () => {
+    if (isFocused) {
+      return query;
+    }
+    const selected = AIRPORTS.find((a) => a.code === value);
+    if (selected) {
+      return `${selected.code} - ${selected.city} (${selected.name})`;
+    }
+    return value || query || '';
+  };
 
   return (
     <div ref={wrapperRef} className="space-y-2 relative">
@@ -80,11 +84,11 @@ export default function AirportAutocomplete({ label, value, onChange, placeholde
         required={required}
         className="glass-input w-full uppercase"
         placeholder={placeholder}
-        value={query}
+        value={getDisplayValue()}
         onChange={handleInputChange}
-        onFocus={() => setIsOpen(true)}
+        onFocus={handleFocus}
       />
-      {isOpen && filteredAirports.length > 0 && (
+      {isFocused && filteredAirports.length > 0 && (
         <ul className="absolute top-[84px] left-0 w-full bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl max-h-56 overflow-y-auto z-50 p-2 shadow-2xl divide-y divide-white/5">
           {filteredAirports.map((airport) => (
             <li

@@ -25,10 +25,12 @@ def seed():
         airports = ["JFK", "LAX", "ORD", "DEL", "BOM"]
         
         for _ in range(20):
+            org = random.choice(airports)
+            dest = random.choice([a for a in airports if a != org])
             p = Prediction(
                 airline=random.choice(airlines),
-                origin=random.choice(airports),
-                destination=random.choice(airports),
+                origin=org,
+                destination=dest,
                 flight_duration=random.randint(60, 600),
                 congestion=random.uniform(1, 10),
                 aircraft_type="Boeing 737",

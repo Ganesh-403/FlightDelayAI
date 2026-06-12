@@ -277,7 +277,7 @@ export default function App() {
                 <h2 className="text-2xl font-black mb-8">Estimated Arrival Delay</h2>
                 
                 <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-7xl font-black text-white">{lastPrediction.delay_prediction.toFixed(1)}</span>
+                  <span className="text-7xl font-black text-white">{lastPrediction.delay.toFixed(1)}</span>
                   <span className="text-xl font-bold text-indigo-400">min</span>
                 </div>
 
