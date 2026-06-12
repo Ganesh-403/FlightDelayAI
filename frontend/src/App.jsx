@@ -17,6 +17,13 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [lastPrediction, setLastPrediction] = useState(null);
   
+  // Stats states
+  const [stats, setStats] = useState({
+    total_predictions: 0,
+    average_delay: 0.0,
+    most_congested_airport: 'N/A'
+  });
+  
   // Auth Modal states
   const [authModal, setAuthModal] = useState(null); // 'login' | 'register' | null
   const [username, setUsername] = useState('');
@@ -27,6 +34,7 @@ export default function App() {
   useEffect(() => {
     checkAuth();
     fetchHistory();
+    fetchStats();
   }, []);
 
   useEffect(() => {
@@ -39,17 +47,28 @@ export default function App() {
 
     socket.on('new_prediction', (data) => {
       console.log('Live prediction event received:', data);
-      // Prepend to history, keeping it to a maximum of 6 elements for layout consistency
+      // Prepend to history
       setHistory((prev) => {
         if (prev.some((item) => item.id === data.id)) return prev;
         return [data, ...prev.slice(0, 5)];
       });
+      // Increment live statistics counters
+      fetchStats();
     });
 
     return () => {
       socket.disconnect();
     };
   }, []);
+
+  const fetchStats = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/v1/predict/stats`);
+      setStats(res.data);
+    } catch (err) {
+      console.error('Failed to load stats', err);
+    }
+  };
 
   const checkAuth = async () => {
     try {
@@ -130,6 +149,42 @@ export default function App() {
       />
       
       <main className="max-w-7xl mx-auto space-y-12">
+        {/* Statistical Overview Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="glass-card p-6 flex flex-col justify-between relative overflow-hidden group hover:border-indigo-500/30 transition-all">
+            <span className="block text-xs text-slate-500 uppercase font-bold tracking-wider mb-2">Total AI Predictions</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-black text-white">{stats.total_predictions}</span>
+              <span className="text-xs text-indigo-400 font-bold">queries</span>
+            </div>
+            <div className="absolute -bottom-4 -right-4 text-white/5 group-hover:text-indigo-500/5 group-hover:scale-110 transition-all select-none pointer-events-none">
+              <span className="text-8xl font-black leading-none">#</span>
+            </div>
+          </div>
+
+          <div className="glass-card p-6 flex flex-col justify-between relative overflow-hidden group hover:border-indigo-500/30 transition-all">
+            <span className="block text-xs text-slate-500 uppercase font-bold tracking-wider mb-2">Average Arrival Delay</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-black text-white">{stats.average_delay}</span>
+              <span className="text-xs text-indigo-400 font-bold">minutes</span>
+            </div>
+            <div className="absolute -bottom-4 -right-4 text-white/5 group-hover:text-indigo-500/5 group-hover:scale-110 transition-all select-none pointer-events-none">
+              <span className="text-8xl font-black leading-none">Min</span>
+            </div>
+          </div>
+
+          <div className="glass-card p-6 flex flex-col justify-between relative overflow-hidden group hover:border-indigo-500/30 transition-all">
+            <span className="block text-xs text-slate-500 uppercase font-bold tracking-wider mb-2">Most Congested Origin</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-black text-white uppercase">{stats.most_congested_airport}</span>
+              <span className="text-xs text-indigo-400 font-bold">IATA</span>
+            </div>
+            <div className="absolute -bottom-4 -right-4 text-white/5 group-hover:text-indigo-500/5 group-hover:scale-110 transition-all select-none pointer-events-none">
+              <span className="text-8xl font-black leading-none">✈</span>
+            </div>
+          </div>
+        </div>
+
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Side: Form */}

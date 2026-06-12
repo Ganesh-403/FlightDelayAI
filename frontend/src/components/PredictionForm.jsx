@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Loader2, Info } from 'lucide-react';
 import axios from 'axios';
+import AirportAutocomplete from './AirportAutocomplete';
 
 export default function PredictionForm({ onNewPrediction }) {
   const [loading, setLoading] = useState(false);
@@ -63,28 +64,21 @@ export default function PredictionForm({ onNewPrediction }) {
               onChange={(e) => setFormData({...formData, aircraft_type: e.target.value})}
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-400">Origin (IATA)</label>
-            <input 
-              required
-              maxLength={3}
-              className="glass-input w-full uppercase"
-              placeholder="JFK"
-              value={formData.origin}
-              onChange={(e) => setFormData({...formData, origin: e.target.value})}
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-400">Destination (IATA)</label>
-            <input 
-              required
-              maxLength={3}
-              className="glass-input w-full uppercase"
-              placeholder="LAX"
-              value={formData.destination}
-              onChange={(e) => setFormData({...formData, destination: e.target.value})}
-            />
-          </div>
+          
+          <AirportAutocomplete
+            required
+            label="Origin (IATA)"
+            placeholder="Search e.g. JFK or New York"
+            value={formData.origin}
+            onChange={(val) => setFormData({...formData, origin: val})}
+          />
+          <AirportAutocomplete
+            required
+            label="Destination (IATA)"
+            placeholder="Search e.g. LAX or Chicago"
+            value={formData.destination}
+            onChange={(val) => setFormData({...formData, destination: val})}
+          />
         </div>
 
         <div className="space-y-4">
